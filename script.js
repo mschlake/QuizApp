@@ -65,6 +65,7 @@ const STORE = [
 // quiz score and question number variables
 let totalCorrect = 0;
 let questionCount = 0;
+let newCounter = -1;
 
 // create elements on page
 function startPage(qText, aText, bText) {
@@ -74,22 +75,27 @@ function startPage(qText, aText, bText) {
 }
 
 // render the front page
-function renderFrontPage() {
+function renderFrontPage(resetFlag) {
   const questionText = "How much do you know about the Red Devils?"
   const answerText = "Test your knowledge of Manchester United Football Club"
   const buttonText = "Start Quiz";
   $('#questions').empty();
   $('#questions').append(startPage(questionText, answerText, buttonText));
+  if(resetFlag === "reset"){
+     startQuiz(resetFlag);
+  }
 }
 
 //start the quiz
-function startQuiz() {
+function startQuiz(resetFlag) {
   $('#startButton').on('click', function (event) {
+    if(resetFlag === "new") {
+      updateNewCounter();
+    }
     $('#questions').empty();
     $('#questions').append(
       (findQuestion()
       ));
-  updateQuestionCount();
   });
 }
 
@@ -115,6 +121,7 @@ function renderAnswers(answers=[]){
 
 //create the form for question and answer quiz
 function createQAForm() {
+  updateNewCounter();
   $('#questions').empty();
   $('#questions').html(`<form>
     <section>
@@ -138,6 +145,7 @@ function checkAnswer() {
     } else {
       incorrectAnswer();
     }
+    updateQuestionCount();
   });
 }
 
@@ -167,7 +175,6 @@ function incorrectAnswer() {
 //find the next question on "next" button clik
 function nextQuestion() {
   $('#nextButton').on('click', function (event) {
-    updateQuestionCount();
     $('#questions').empty();
     $('#questions').append(
       (findQuestion()));
@@ -184,11 +191,17 @@ function updateTotalCorrect() {
 // update the question count
 function updateQuestionCount() {
   questionCount++;
-  $('.questionCount').text(questionCount)
+}
+
+//update new counter
+function updateNewCounter() {
+  newCounter++;
+  $('.questionCount').text(newCounter)
+  console.log("test");
 }
 
 //final page-show user final score with reset quiz button
-function finalSummaryPage() {
+function finalSummaryPage() {   
   $('#questions').empty();
   $('#questions').html(
     `<h3 class="questionBlock">You got ${totalCorrect} out of 5 questions correct.</h3>
@@ -198,11 +211,13 @@ function finalSummaryPage() {
   resetQuiz();
 }
 
-// reset the Quiz elements
+//reset quiz
 function resetQuiz() {
-  $('#resetButton').on('click', function (event) {
-    event.preventDefault();    
-    renderFrontPage();
+  $('#resetButton').on('click', function (event) {  
+    renderFrontPage("reset");
+    newCounter = 0;
+    totalCorrect = 0;
+    questionCount = 0;
     $('.questionCount').text(0);
     $('.totalCorrect').text(0);
   });
@@ -211,8 +226,8 @@ function resetQuiz() {
 //runs all the functions
 function startQuizApp() {
   startPage();
-  renderFrontPage();
-  startQuiz();
+  renderFrontPage("new");
+  startQuiz("new");
 }
 
 $(startQuizApp);
