@@ -85,11 +85,11 @@ function renderFrontPage() {
 //start the quiz
 function startQuiz() {
   $('#startButton').on('click', function (event) {
-    updateQuestionCount();
     $('#questions').empty();
     $('#questions').append(
       (findQuestion()
       ));
+  updateQuestionCount();
   });
 }
 
