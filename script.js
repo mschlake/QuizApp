@@ -197,7 +197,6 @@ function updateQuestionCount() {
 function updateNewCounter() {
   newCounter++;
   $('.questionCount').text(newCounter)
-  console.log("test");
 }
 
 //final page-show user final score with reset quiz button
